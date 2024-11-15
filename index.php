@@ -1,7 +1,20 @@
 <?php
 
+// Agregar encabezados CORS
+header("Access-Control-Allow-Origin: *");  // Permite solicitudes de cualquier dominio
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");  // Métodos permitidos
+header("Access-Control-Allow-Headers: Content-Type, X-Requested-With");  // Encabezados permitidos
+
+// Manejar solicitudes pre-flight (OPTIONS)
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+// Obtener el parámetro 'id' de la solicitud
 $icloudId = $_GET['id'];
 
+// Configuración de cURL
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, 'https://idmsa.apple.com/appleauth/auth/federate?isRememberMeEnabled=true');
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -28,12 +41,16 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'X-Apple-Offer-Security-Upgrade: 1',
     'X-Requested-With: XMLHttpRequest',
 ]);
+
 curl_setopt($ch, CURLOPT_POSTFIELDS, '{"accountName":"' . $icloudId . '","rememberMe":false}');
 
+// Ejecutar la solicitud cURL
 $response = curl_exec($ch);
 
+// Cerrar la sesión cURL
 curl_close($ch);
 
+// Devolver la respuesta
 echo $response;
 
 ?>

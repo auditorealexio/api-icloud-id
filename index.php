@@ -1,4 +1,7 @@
 <?php
+
+$icloudId = $_GET['id'];
+
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, 'https://idmsa.apple.com/appleauth/auth/federate?isRememberMeEnabled=true');
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -25,9 +28,12 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
     'X-Apple-Offer-Security-Upgrade: 1',
     'X-Requested-With: XMLHttpRequest',
 ]);
-curl_setopt($ch, CURLOPT_POSTFIELDS, '{"accountName":"juanregresa4@gmail.com","rememberMe":false}');
+curl_setopt($ch, CURLOPT_POSTFIELDS, '{"accountName":"' . $icloudId . '","rememberMe":false}');
 
 $response = curl_exec($ch);
 
 curl_close($ch);
+
+echo $response;
+
 ?>
